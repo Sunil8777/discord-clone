@@ -9,11 +9,11 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
   } from "@/components/ui/dialog"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
+import FileUpload from "../file-upload"
 
 export default function InitialModel() {
 
@@ -36,9 +36,10 @@ export default function InitialModel() {
 
     const isLoading = form.formState.isSubmitting
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
-      }
+    const onSubmit = (values: z.infer<typeof formSchema>) => {
+        console.log("hello")
+
+    }
     
   return (
     <Dialog open>
@@ -53,7 +54,18 @@ export default function InitialModel() {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <div className="space-y-8 px-6">
                         <div className="flex items-center justify-center text-center">
-
+                            <FormField
+                            control={form.control}
+                            name="imageUrl"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <FileUpload endPoint = "serverImage" onChange={field.onChange} value={field.value}/>
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                            />
                         </div>
                         <FormField
                         control={form.control}
@@ -70,7 +82,7 @@ export default function InitialModel() {
                     />
                     </div>
                     <DialogFooter className="bg-gray-100 px-6 py-4">
-                        <Button disabled={isLoading} variant={"primary"}>
+                        <Button type="submit" disabled={isLoading} variant= "primary">
                             Create
                         </Button>
                     </DialogFooter>

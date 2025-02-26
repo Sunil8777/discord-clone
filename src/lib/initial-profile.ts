@@ -4,7 +4,7 @@ import { currentUser } from '@clerk/nextjs/server'
 
 export async function initialProfile () {
     const user = await currentUser()
-    const {  redirectToSignIn } = await auth()
+    const { redirectToSignIn } = await auth()
 
     if(!user){
         return redirectToSignIn()
