@@ -14,8 +14,12 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import FileUpload from "../file-upload"
+import toast from 'react-hot-toast'
+import axios from "axios"
+import { useRouter } from "next/navigation"
 
 export default function InitialModel() {
+    const router = useRouter()
 
     const formSchema = z.object({
         name: z.string().min(1, {
@@ -36,9 +40,18 @@ export default function InitialModel() {
 
     const isLoading = form.formState.isSubmitting
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log("hello")
-
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            await axios.post('/api/servers',values);
+            toast.success("Server created");
+            form.reset()
+            router.refresh()
+            window.location.reload()
+            
+        } catch (error) {
+            toast.error("Something went wrong")
+            console.log("Error in initial-model",error)
+        }
     }
     
   return (

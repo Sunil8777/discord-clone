@@ -11,7 +11,6 @@ interface fileUploadProps {
 
 export default function FileUpload({onChange,value,endPoint}:fileUploadProps) {
     const fileTpye = value?.split(".").pop()
-    console.log(fileTpye)
 
     if(value && fileTpye!=="pdf"){
         return(
