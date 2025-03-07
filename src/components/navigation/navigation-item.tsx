@@ -15,7 +15,6 @@ interface NavigationActionProps {
 export default function NavigationItem({id,imageUrl,name}:NavigationActionProps) {
     const params = useParams()
     const router = useRouter()
-    console.log(imageUrl)
 
     const handleClick = () =>{
         router.push(`/servers/${id}`)
