@@ -1,3 +1,4 @@
+import prisma  from "@/lib/db";
 import currentProfile from '@/lib/current-profile'
 import { redirect } from 'next/navigation'
 import NavigationAction from './navigation-action'
