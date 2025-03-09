@@ -1,6 +1,7 @@
 
 import currentProfile from "@/lib/current-profile"
 import { RedirectToSignIn } from "@clerk/nextjs"
+import { auth } from "@clerk/nextjs/server"
 import { redirect} from "next/navigation"
 
 interface inviteCodeProps{
@@ -11,12 +12,13 @@ interface inviteCodeProps{
 
 export default async function page({params}:inviteCodeProps) {
     
-    const {inviteCode} = params
+    const {inviteCode} = await params
     console.log(inviteCode)
     const profile = await currentProfile()
 
     if(!profile){
-        return <RedirectToSignIn/>
+        const {redirectToSignIn} = await auth()
+        return redirectToSignIn()
     }
 
     const existingServer = await prisma?.server.findFirst({
