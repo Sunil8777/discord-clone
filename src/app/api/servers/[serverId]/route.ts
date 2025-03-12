@@ -36,3 +36,35 @@ export async function PATCH(req:Request,{params}:{params:{serverId:string}}) {
         return new NextResponse("Internal Error",{status:500})
     }
 }
+
+export async function DELETE(req:Request,{params}:{params:{serverId:string}}) {
+    try {
+        const {serverId} = await params
+        const profile = await currentProfile()
+
+        if(!profile){
+            return new NextResponse("Unauthorized request",{status:401})
+        }
+
+        if(!serverId){
+            return new NextResponse("Unauthorized request",{status:401})
+        }
+
+        const updatedServer = await prisma?.server.delete({
+            where:{
+                id:serverId,
+                profileId:profile.id
+            }
+        })
+
+        if(!updatedServer){
+            return new NextResponse("Bad request",{status:400})
+        }
+
+        return NextResponse.json(updatedServer,{status:200})
+
+    } catch (error) {
+        console.log("Internal Error",error)
+        return new NextResponse("ServerId delete",{status:500})
+    }
+}

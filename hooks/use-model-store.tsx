@@ -1,13 +1,13 @@
 import { Server } from '@prisma/client'
 import  {create} from 'zustand'
 
-export type ModelType = "createServer" | "invite" | "editServer" | "members"
+export type ModelType = "createServer" | "invite" | "editServer" | "members" | "createChannel" | "leaveServer" | "deleteServer"
 
 interface ModelStore {
     type: ModelType | null,
     data?:Server
     isOpen: boolean,
-    onOpen: (type: ModelType,data:Server) => void,
+    onOpen: (type: ModelType,data?:Server) => void,
     onClose: () => void
 }
 
