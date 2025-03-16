@@ -1,20 +1,26 @@
-import { Server } from '@prisma/client'
+import { Channel, channelType, Server } from '@prisma/client'
 import  {create} from 'zustand'
 
-export type ModelType = "createServer" | "invite" | "editServer" | "members" | "createChannel" | "leaveServer" | "deleteServer"
+export type ModelType = "createServer" | "invite" | "editServer" | "members" | "createChannel" | "leaveServer" | "deleteServer" | "deleteChannel"
+
+interface ModelData {
+    server?: Server,
+    channelTypes?: channelType,
+    channel?: Channel
+}
 
 interface ModelStore {
     type: ModelType | null,
-    data?:Server
+    data?:ModelData
     isOpen: boolean,
-    onOpen: (type: ModelType,data?:Server) => void,
+    onOpen: (type: ModelType,data?:ModelData) => void,
     onClose: () => void
 }
 
 export const useModel = create<ModelStore>((set) => ({
     type: null,
-    data: undefined,
+    data: {},
     isOpen: false,
     onOpen: (type,data) => set({isOpen:true,type,data}),
-    onClose: () => set({type:null,isOpen:false,data:undefined})
+    onClose: () => set({type:null,isOpen:false})
   }))

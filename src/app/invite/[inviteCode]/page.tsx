@@ -1,6 +1,5 @@
 
 import currentProfile from "@/lib/current-profile"
-import { RedirectToSignIn } from "@clerk/nextjs"
 import { auth } from "@clerk/nextjs/server"
 import { redirect} from "next/navigation"
 
