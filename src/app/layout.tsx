@@ -5,6 +5,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/provider/theme-provider";
 import { cn } from "@/lib/utils";
 import ModelProvider from "@/components/provider/model-provider";
+import { SocketProvider } from "@/components/provider/socket-provider";
+import { QueryProvider } from "@/components/provider/query-provider";
 
 const font = Open_Sans({
   variable: "--font-geist-sans",
@@ -37,8 +39,12 @@ export default function RootLayout({
             enableSystem
             storageKey="discord-theme"
           >
-            <ModelProvider/>
-            {children}
+            <SocketProvider>
+              <ModelProvider/>
+              <QueryProvider>
+                {children}
+              </QueryProvider>
+            </SocketProvider>
           </ThemeProvider>       
         </body>
       </html>
