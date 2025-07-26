@@ -20,6 +20,7 @@ export function ChatHeader({
   type,
   imageUrl
 }: ChatHeaderProps) {
+  
   return (
     <div className="text-md font-semibold px-3 flex items-center h-12 border-neutral-200 dark:border-neutral-800 border-b-2">
       <MobileToggle serverId={serverId} />

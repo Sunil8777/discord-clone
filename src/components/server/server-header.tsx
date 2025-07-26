@@ -13,7 +13,6 @@ interface ServerHeaderProps{
 
 export default function ServerHeader({server,role}:ServerHeaderProps) {
 
-    console.log(server)
     const {onOpen} = useModel()
 
     const isAdmin = role === MemberRole.ADMIN

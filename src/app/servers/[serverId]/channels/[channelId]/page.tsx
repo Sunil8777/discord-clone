@@ -39,7 +39,7 @@ export default async function ChannelIdPage({
       <ChatHeader
         name={channel.name}
         serverId={channel.serverId}
-        type="channel"
+        type="channel" 
       />
       {channel.type === channelType.TEXT && (
         <>

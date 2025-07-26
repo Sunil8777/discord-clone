@@ -1,55 +1,65 @@
-import currentProfile from "@/lib/current-profile"
-import { RedirectToSignIn } from "@clerk/nextjs";
-import prisma from '@/lib/db'
-import { redirect } from "next/navigation";
-import { getOrCreateConversation } from "@/lib/conversation";
-import { ChatHeader } from "@/components/chat /ChateHeader";
-import { ChatInput } from "@/components/chat /chat-input";
-import { ChatMessages } from "@/components/chat /chat-message";
+import React from "react";
 
-interface MemberIdProps {
-    params:{
-        serverId : string,
-        memberId: string
-    }
+import { redirect } from "next/navigation";
+
+
+import { getOrCreateConversation } from "@/lib/conversation";
+
+import { MediaRoom } from "@/components/media-room";
+import currentProfile from "@/lib/current-profile";
+import { RedirectToSignIn } from "@clerk/nextjs";
+import { ChatHeader } from "@/components/chat /ChateHeader";
+import { ChatMessages } from "@/components/chat /chat-message";
+import { ChatInput } from "@/components/chat /chat-input";
+
+interface MemberIdPageProps {
+  params: {
+    memberId: string;
+    serverId: string;
+  };
+  searchParams: {
+    video?: boolean;
+  };
 }
 
-const MemberIdPage = async ({params}:MemberIdProps) => {
-    const profile = await currentProfile();
-    const {memberId,serverId} = await params
+export default async function MemberIdPage({
+  params,
+  searchParams
+}: MemberIdPageProps) {
+  const {memberId, serverId} = await params
+  const {video} = await searchParams
+  const profile = await currentProfile();
 
-    if(!profile){
-        return RedirectToSignIn
+  if (!profile) return RedirectToSignIn;
+
+  const currentMember = await prisma!.member.findFirst({
+    where: {
+      serverId,
+      profileId: profile.id
+    },
+    include: {
+      profile: true
     }
+  });
 
-    const currentMember = await prisma.member.findFirst({
-        where:{
-            serverId: params.serverId,
-            profileId:profile.id,
-        },
-        include:{
-            profile:true
-        }
-    })
+  if (!currentMember) return redirect("/");
 
-    if(!currentMember){
-        redirect('/')
-    }
+  const conversation = await getOrCreateConversation(
+    currentMember.id,
+    memberId
+  );
 
-    const conversation = await getOrCreateConversation(currentMember.id,params.memberId)
+  if (!conversation) return redirect(`/servers/${serverId}`);
 
-    if(!conversation){
-        return redirect(`/servers/${serverId}`)
-    }
+  const { memberOne, memberTwo } = conversation;
 
-    const {memberOne,memberTwo} = conversation
+  const otherMember =
+    memberOne.profileId === profile.id ? memberTwo : memberOne;
 
-    const otherMember = memberOne.profileId === profile.id ? memberTwo : memberOne;
-
-    return(
-        <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+  return (
+    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
       <ChatHeader
-        imageUrl={otherMember.profile.imageUrl}
+        imageUrl={otherMember.profile.profileImage}
         name={otherMember.profile.name}
         serverId={serverId}
         type="conversation"
@@ -58,7 +68,7 @@ const MemberIdPage = async ({params}:MemberIdProps) => {
       {!video && (
         <>
           <ChatMessages
-            member={currentMember } 
+            member={currentMember}
             name={otherMember.profile.name}
             chatId={conversation.id}
             type="conversation"
@@ -81,6 +91,5 @@ const MemberIdPage = async ({params}:MemberIdProps) => {
         </>
       )}
     </div>
-    )
+  );
 }
-export default MemberIdPage

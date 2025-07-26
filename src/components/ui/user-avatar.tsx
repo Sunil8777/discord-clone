@@ -1,6 +1,5 @@
 import {
     Avatar,
-    AvatarFallback,
     AvatarImage,
   } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils";
@@ -11,6 +10,7 @@ import { cn } from "@/lib/utils";
   }
   
   export function UserAvatar({src,className}:UserAvatarProps) {
+    
     return (
       <Avatar className={cn(
         "h-7 w-7 md:h-10 md:w-10",

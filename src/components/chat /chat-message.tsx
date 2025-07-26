@@ -7,6 +7,8 @@ import { format } from "date-fns";
 import { useChatQuery } from "../../../hooks/use-chat-query";
 import { ChatWelcome } from "./chat-welcome";
 import { ChatItem } from "./chat-item";
+import { useChatSocket } from "../../../hooks/use-chat-socket";
+import { useChatScroll } from "../../../hooks/use-chat-scroll";
 
 interface ChatMessagesProps {
   name: string;
@@ -43,10 +45,10 @@ export function ChatMessages({
   const addKey = `chat:${chatId}:messages`;
   const updateKey = `chat:${chatId}:messages:update`;
 
-  const chatRef = useRef<ElementRef<"div">>(null);
-  const bottomRef = useRef<ElementRef<"div">>(null);
+  const chatRef = useRef<HTMLDivElement >(null);
+  const bottomRef = useRef<HTMLDivElement >(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, isLoading } =
     useChatQuery({
       queryKey,
       apiUrl,
@@ -66,7 +68,7 @@ export function ChatMessages({
     count: data?.pages?.[0]?.items?.length ?? 0
   });
 
-  if (status === "loading")
+  if (isLoading)
     return (
       <div className="flex flex-col flex-1 justify-center items-center">
         <Loader2 className="h-7 w-7 text-zinc-500 animate-spin my-4" />
